@@ -9,8 +9,8 @@ def create_composite_card(input_path, output_path, base_image_path):
     try:
         with Image.open(base_image_path).convert("RGBA") as base_img:
             base_width, base_height = base_img.size
-            profile_size = base_width // 2
-            target_size = (profile_size, profile_size)
+            # 80% of half size (0.8 * 425 = 340)
+            target_size = (340, 340)
 
             with Image.open(input_path) as img:
                 # Square validation
@@ -28,16 +28,20 @@ def create_composite_card(input_path, output_path, base_image_path):
                 # Circular Masking
                 mask = Image.new("L", target_size, 0)
                 draw = ImageDraw.Draw(mask)
-                draw.ellipse((0, 0, profile_size, profile_size), fill=255)
+                draw.ellipse((0, 0, target_size[0], target_size[1]), fill=255)
 
-                # Paste onto base image (Bottom-Left)
-                # Position (0, base_height - profile_size)
-                paste_position = (0, base_height - profile_size)
+                # Paste onto base image (Centered in Bottom-Left Quadrant)
+                # Bottom-left quadrant: x[0, 425], y[425, 850]
+                # Center 340 within 425: (425 - 340) // 2 = 42.5 -> 43
+                x_offset = (base_width // 2 - target_size[0]) // 2 + 1 # 42 + 1 = 43
+                y_offset = base_height // 2 + (base_height // 2 - target_size[1]) // 2 + 1 # 425 + 42 + 1 = 468
+                paste_position = (x_offset, y_offset)
+                
                 base_img.paste(img, paste_position, mask=mask)
 
                 # Save to results/
                 base_img.save(output_path, "PNG")
-                print(f"Generated composite: {output_path}")
+                print(f"Generated composite: {output_path} at {paste_position}")
 
     except Exception as e:
         print(f"Error processing {input_path}: {e}")
