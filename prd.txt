@@ -1,0 +1,64 @@
+# PRD — Image Card Generator (Circle Mask)
+
+## 1. Objective
+
+Create a Python program that processes images from an input folder, transforms valid images into circular card elements, and outputs them as new images suitable for use in a card-style UI or design system.
+
+The program must be deterministic, filesystem-based, and runnable locally without user interaction.
+
+---
+
+## 2. Inputs
+
+### 2.1 Folders
+- Input folder: `images/`
+- Output folder: `results/`
+
+### 2.2 Reference Image
+- Reference file: `card-energy-v2.png`
+- Target size: 50% of reference width and height
+
+---
+
+## 3. Functional Requirements
+
+### 3.1 Image Iteration
+- Iterate through all files in `images/`
+- Ignore non-image files safely
+
+### 3.2 Square Validation
+- Process only square images (width == height)
+- Skip non-square images without errors
+
+### 3.3 Resizing
+- Resize valid images to:
+  - width = reference_width / 2
+  - height = reference_height / 2
+- Use high-quality resampling (LANCZOS)
+
+### 3.4 Circular Masking
+- Apply centered circular mask
+- Anti-aliased edges
+- Transparent background outside circle
+
+### 3.5 Output
+- Output filename: `<original_name>_card.png`
+- Save to `results/` folder
+- Create `results/` automatically if missing
+
+---
+
+## 4. Non-Functional Requirements
+
+- Language: Python 3
+- Library: Pillow (PIL)
+- Robust to empty folders and invalid files
+
+---
+
+## 5. Acceptance Criteria
+
+- Correct resizing relative to reference image
+- Smooth circular masks
+- Transparent backgrounds
+- No crashes on invalid input
