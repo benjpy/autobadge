@@ -9,8 +9,8 @@ def create_composite_card(input_path, output_path, base_image_path):
     try:
         with Image.open(base_image_path).convert("RGBA") as base_img:
             base_width, base_height = base_img.size
-            # 80% of half size (0.8 * 425 = 340)
-            target_size = (340, 340)
+            # 90% of half size (0.8 * 425 = 340)
+            target_size = (374, 374)
 
             with Image.open(input_path) as img:
                 # Square validation
